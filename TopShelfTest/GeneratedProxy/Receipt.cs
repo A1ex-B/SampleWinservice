@@ -10,7 +10,7 @@
 
 using System.Runtime.Serialization;
 
-namespace TopShelfTest
+namespace Proxy
 {
 
     [System.Diagnostics.DebuggerStepThroughAttribute()]

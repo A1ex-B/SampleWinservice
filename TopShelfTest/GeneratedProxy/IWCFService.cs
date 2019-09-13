@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TopShelfTest
+namespace Proxy
 {
 
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ServiceModel.ServiceContractAttribute(ConfigurationName = "IService")]
-    public interface IService
+    public interface IWCFService
     {
 
         [System.ServiceModel.OperationContractAttribute(Action = "http://tempuri.org/IService/PutReceipt", ReplyAction = "http://tempuri.org/IService/PutReceiptResponse")]

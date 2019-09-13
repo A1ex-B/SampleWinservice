@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Autofac;
 using Topshelf;
 
-namespace TopShelfTest
+namespace Service
 {
     public class Program
     {
@@ -15,27 +15,12 @@ namespace TopShelfTest
         {
             //XmlConfigurator.Configure();
             var builder = new ContainerBuilder();
-            builder.RegisterModule(new DIModule());
+            builder.RegisterModule(new DIModule("SomePath\\SomeFilename.cfg"));
             using (var container = builder.Build())
             {
-                var rc = HostFactory.Run(hostConfigurator =>
-                {
-                    hostConfigurator.SetServiceName("MyService");
-                    hostConfigurator.SetDisplayName("My Service");
-                    hostConfigurator.SetDescription("Does custom logic.");
-
-                    hostConfigurator.RunAsLocalSystem();
-                //hostConfigurator.UseLog4Net();
-
-                hostConfigurator.Service<ITownCrier>(serviceConfigurator =>
-                    {
-                        serviceConfigurator.ConstructUsing(hostSettings => container.Resolve<ITownCrier>());
-                        serviceConfigurator.WhenStarted(service => service.Start());
-                        serviceConfigurator.WhenStopped(service => service.Stop());
-                    });
-                });
-                var exitCode = (int)Convert.ChangeType(rc, rc.GetTypeCode());
-                Environment.ExitCode = exitCode;
+                var launcher = container.Resolve<IServiceLauncher>();
+                var exitCode = launcher.Launch();
+                Environment.ExitCode = (int)Convert.ChangeType(exitCode, exitCode.GetTypeCode());
             }
         }
     }

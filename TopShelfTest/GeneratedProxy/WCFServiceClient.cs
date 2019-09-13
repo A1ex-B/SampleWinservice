@@ -4,34 +4,34 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TopShelfTest
+namespace Proxy
 {
 
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public class ServiceClient : System.ServiceModel.ClientBase<IService>, IService
+    public class WCFServiceClient : System.ServiceModel.ClientBase<IWCFService>, IWCFService
     {
 
-        public ServiceClient()
+        public WCFServiceClient()
         {
         }
 
-        public ServiceClient(string endpointConfigurationName) :
+        public WCFServiceClient(string endpointConfigurationName) :
                 base(endpointConfigurationName)
         {
         }
 
-        public ServiceClient(string endpointConfigurationName, string remoteAddress) :
+        public WCFServiceClient(string endpointConfigurationName, string remoteAddress) :
                 base(endpointConfigurationName, remoteAddress)
         {
         }
 
-        public ServiceClient(string endpointConfigurationName, System.ServiceModel.EndpointAddress remoteAddress) :
+        public WCFServiceClient(string endpointConfigurationName, System.ServiceModel.EndpointAddress remoteAddress) :
                 base(endpointConfigurationName, remoteAddress)
         {
         }
 
-        public ServiceClient(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) :
+        public WCFServiceClient(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) :
                 base(binding, remoteAddress)
         {
         }

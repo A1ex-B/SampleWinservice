@@ -1,6 +1,6 @@
-﻿namespace TopShelfTest
+﻿namespace Service
 {
-    public interface ITownCrier
+    public interface IService
     {
         void Start();
         void Stop();
