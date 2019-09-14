@@ -19,7 +19,6 @@ namespace Service
 
         private ServiceConfig Load(string filename)
         {
-            //В будущем можно будет сделать загрузку из файла.
             var config = new ServiceConfig();
             if (filename != null)
             {
