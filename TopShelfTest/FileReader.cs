@@ -35,6 +35,10 @@ namespace Service
                 {
                     return null;
                 }
+                catch(Newtonsoft.Json.JsonReaderException)
+                {
+                    return null;
+                }
                 catch(System.IO.IOException)
                 {
                     continue;

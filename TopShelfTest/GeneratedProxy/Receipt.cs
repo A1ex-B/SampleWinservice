@@ -9,6 +9,7 @@
 //------------------------------------------------------------------------------
 
 using System.Runtime.Serialization;
+using System.Text;
 using Newtonsoft.Json;
 
 namespace Proxy
@@ -107,6 +108,25 @@ namespace Proxy
             {
                 this.SummField = value;
             }
+        }
+        public override string ToString()
+        {
+            var s = new StringBuilder();
+            s.Append($"Id: {Id}\n");
+            s.Append($"Number: {Number}\n");
+            s.Append($"Summ: {Summ}\n");
+            s.Append($"Discount: {Discount}\n");
+            s.Append("Articles: [");
+            for (int i = 0; i < Articles.Length; i++)
+            {
+                s.Append($"\"{Articles[i]}\"");
+                if (i < Articles.Length - 1)
+                {
+                    s.Append(", ");
+                }
+            }
+            s.Append("]\n");
+            return s.ToString();
         }
     }
 

@@ -1,0 +1,12 @@
+{
+"ServiceName":"_FolderMonitor",
+"ServiceDisplayName":"_FolderMonitor",
+"ServiceDescription":"_FolderMonitor - test task.",
+"InputFolder":"Input",
+"CompleteFolder":"Complete",
+"GarbageFolder":"Garbage",
+"FileExtension":".txt",
+"AttempsToAccessFilesystem":5,
+"DelayForAnotherAttempt":20,
+"LogFileFullName":"d:\\Programs\\CS_progs\\___TestTasks\\Manzana\\winservicelog.txt"
+}

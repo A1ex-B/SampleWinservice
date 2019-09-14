@@ -73,10 +73,14 @@
     <Compile Include="IConfigLoader.cs" />
     <Compile Include="IFileProcessor.cs" />
     <Compile Include="IFileReader.cs" />
+    <Compile Include="ILogger.cs" />
+    <Compile Include="IReceiptSender.cs" />
     <Compile Include="IServiceLauncher.cs" />
     <Compile Include="IService.cs" />
+    <Compile Include="MyDebugLogger.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReceiptSender.cs" />
     <Compile Include="ServiceConfig.cs" />
     <Compile Include="ServiceLauncher.cs" />
     <Compile Include="FolderMonitor.cs" />
@@ -86,6 +90,9 @@
     <None Include="app.manifest" />
     <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="config.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

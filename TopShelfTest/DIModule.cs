@@ -24,6 +24,8 @@ namespace Service
                             .SingleInstance();
             builder.RegisterType<FileProcessor>().AsImplementedInterfaces().InstancePerDependency();
             builder.RegisterType<FileReader>().AsImplementedInterfaces().InstancePerDependency();
+            builder.RegisterType<ReceiptSender>().AsImplementedInterfaces().InstancePerDependency();
+            builder.RegisterType<MyDebugLogger>().AsImplementedInterfaces().SingleInstance();
         }
     }
 }

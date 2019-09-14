@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Service
 {
@@ -19,22 +20,31 @@ namespace Service
         private ServiceConfig Load(string filename)
         {
             //В будущем можно будет сделать загрузку из файла.
+            var config = new ServiceConfig();
             if (filename != null)
             {
-                ; //
+                using (var reader = new StreamReader(filename))
+                {
+                    config = JsonConvert.DeserializeObject<ServiceConfig>(reader.ReadToEnd());
+                }
             }
-
-            return new ServiceConfig
+            else
             {
-                ServiceDescription = "_FolderMonitor - test task.",
-                ServiceDisplayName = "_FolderMonitor",
-                ServiceName = "_FolderMonitor",
-                //+ Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "Input")
-                InputFolder = "Input", 
-                CompleteFolder = "Complete",
-                GarbageFolder = "Garbage",
-                FileExtension = ".txt"
+                config = new ServiceConfig
+                {
+                    ServiceDescription = "_FolderMonitor - test task.",
+                    ServiceDisplayName = "_FolderMonitor",
+                    ServiceName = "_FolderMonitor",
+                    InputFolder = "Input",
+                    CompleteFolder = "Complete",
+                    GarbageFolder = "Garbage",
+                    FileExtension = ".txt",
+                    AttempsToAccessFilesystem = 5,
+                    DelayForAnotherAttempt = 20,
+                    LogFileFullName = @"d:\Programs\CS_progs\___TestTasks\Manzana\winservicelog.txt"
+                };
             };
+            return config;
         }
 
         public ServiceConfig Load()

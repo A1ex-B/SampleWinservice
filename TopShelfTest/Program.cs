@@ -14,8 +14,10 @@ namespace Service
         public static void Main()
         {
             //XmlConfigurator.Configure();
+            System.IO.Directory.SetCurrentDirectory(System.AppDomain.CurrentDomain.BaseDirectory);
             var builder = new ContainerBuilder();
-            builder.RegisterModule(new DIModule("SomePath\\SomeFilename.cfg"));
+            builder.RegisterModule(new DIModule(Directory.GetParent(Environment.CurrentDirectory).Parent.FullName + 
+                "\\config.txt"));
             using (var container = builder.Build())
             {
                 var launcher = container.Resolve<IServiceLauncher>();

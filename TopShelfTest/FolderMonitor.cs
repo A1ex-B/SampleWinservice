@@ -11,14 +11,19 @@ namespace Service
     {
         private readonly ServiceConfig _config;
         private readonly IFileProcessor _fileProcessor;
+        private readonly IReceiptSender _receiptSender;
+        private readonly ILogger _logger;
 
         private readonly FileSystemWatcher _watcher;
-        public FolderMonitor(IConfigLoader loader, IFileProcessor fileProcessor)
+        public FolderMonitor(IConfigLoader loader, IFileProcessor fileProcessor, IReceiptSender receiptSender, ILogger logger)
         {
             _fileProcessor = fileProcessor ?? throw new ArgumentNullException(nameof(fileProcessor));
             _config = loader.Load();
             _watcher = new FileSystemWatcher(_config.InputFolder);
             _watcher.Created += OnCreatedFile;
+            _receiptSender = receiptSender ?? throw new ArgumentNullException(nameof(receiptSender));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            //System.IO.Directory.SetCurrentDirectory(System.AppDomain.CurrentDomain.BaseDirectory);
         }
         public void Start()
         {
@@ -34,12 +39,14 @@ namespace Service
             Receipt receipt = null;
             try
             {
+                _logger.Log($"Fired OnCreatedFile...");
                 receipt = await _fileProcessor.Process(e.FullPath);
                 ;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Exception {ex}:{ex.Message}");
+                _logger.Log($"Exception {ex}:{ex.Message}");
                 //Logger.Log(...);
                 //throw;
             }
@@ -50,6 +57,24 @@ namespace Service
             } else
             {
                 Console.WriteLine("Receipt processed ok!");
+                _logger.Log("Receipt processed ok!");
+                try
+                {
+                    await _receiptSender.SendAsync(receipt);
+                    _logger.Log($"Sent \n{receipt}");
+                }
+                catch (System.ServiceModel.CommunicationObjectFaultedException)
+                {
+                    Console.WriteLine("Ошибка связи с WCF-сервисом!");
+                    _logger.Log("Ошибка связи с WCF-сервисом!");
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine("Неизвестное исключение в момент связи с WCF-сервисом:");
+                    Console.WriteLine($"{ex.GetType()}:\n{ex.Message}");
+                    _logger.Log("Неизвестное исключение в момент связи с WCF-сервисом:");
+                    _logger.Log($"{ex.GetType()}:\n{ex.Message}");
+                }
             }
         }
 
