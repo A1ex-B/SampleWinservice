@@ -9,6 +9,7 @@
 //------------------------------------------------------------------------------
 
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace Proxy
 {
@@ -42,7 +43,7 @@ namespace Proxy
                 this.extensionDataField = value;
             }
         }
-
+        [JsonProperty(Required = Required.Always)]
         [System.Runtime.Serialization.DataMemberAttribute()]
         public string[] Articles
         {
@@ -55,7 +56,7 @@ namespace Proxy
                 this.ArticlesField = value;
             }
         }
-
+        [JsonProperty(Required = Required.Always)]
         [System.Runtime.Serialization.DataMemberAttribute()]
         public decimal Discount
         {
@@ -68,7 +69,7 @@ namespace Proxy
                 this.DiscountField = value;
             }
         }
-
+        [JsonProperty(Required = Required.Always)]
         [System.Runtime.Serialization.DataMemberAttribute()]
         public System.Guid Id
         {
@@ -81,7 +82,7 @@ namespace Proxy
                 this.IdField = value;
             }
         }
-
+        [JsonProperty(Required = Required.Always)]
         [System.Runtime.Serialization.DataMemberAttribute()]
         public string Number
         {
@@ -94,7 +95,7 @@ namespace Proxy
                 this.NumberField = value;
             }
         }
-
+        [JsonProperty(Required = Required.Always)]
         [System.Runtime.Serialization.DataMemberAttribute()]
         public decimal Summ
         {

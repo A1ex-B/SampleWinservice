@@ -50,15 +50,25 @@ namespace Service
 
         private async void OnCreatedFile(object sender, FileSystemEventArgs e)
         {
+            Receipt receipt = null;
             try
             {
-                var receipt = await _fileProcessor.Process(e.FullPath);
+                receipt = await _fileProcessor.Process(e.FullPath);
                 ;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // Logger.Log(...);
-                throw;
+                Console.WriteLine($"Exception {ex}:{ex.Message}");
+                //Logger.Log(...);
+                //throw;
+            }
+            if (receipt == null)
+            {
+                Console.WriteLine("Bad file!");
+                // Logget.Log(...);
+            } else
+            {
+                Console.WriteLine("Receipt processed ok!");
             }
         }
 

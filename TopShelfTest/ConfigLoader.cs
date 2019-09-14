@@ -31,8 +31,8 @@ namespace Service
                 ServiceName = "_FolderMonitor",
                 //+ Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "Input")
                 InputFolder = "Input", 
-                CompleteFolder = "",
-                GarbageFolder = "",
+                CompleteFolder = "Complete",
+                GarbageFolder = "Garbage",
                 FileExtension = ".txt"
             };
         }
