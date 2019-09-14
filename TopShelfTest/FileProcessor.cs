@@ -22,78 +22,39 @@ namespace Service
             _config = loader.Load();
             _fileReader = fileReader ?? throw new ArgumentNullException(nameof(fileReader));
         }
-        private bool IsFileLocked(FileInfo file)
+        private async Task<int> TryMoveAsync(string sourceFullFileName, string destFullFileName, int delay, int attempts)
         {
-            FileStream stream = null;
-
-            try
+            int i = 0;
+            string destPath = Path.GetDirectoryName(destFullFileName);
+            string destFilename = Path.GetFileName(destFullFileName);
+            for (; i < attempts; i++)
             {
-                stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None);
-            }
-            catch (IOException)
-            {
-                //the file is unavailable because it is:
-                //still being written to
-                //or being processed by another thread
-                //or does not exist (has already been processed)
-                return true;
-            }
-            finally
-            {
-                if (stream != null)
-                    stream.Close();
-            }
-
-            //file is not locked
-            return false;
-        }
-        private async Task<bool> WaitForFileAsync(FileInfo file, int attempts, int delay)
-        {
-            Console.WriteLine("Ждём, пока файл освободится...");
-            for (int i = 0; i < attempts; i++)
-            {
-                if (!IsFileLocked(file))
+                try
                 {
-                    Console.WriteLine($"Успешно, ждали {i} попыток");
-                    return true;
-                } else
+                    File.Move(sourceFullFileName, Path.Combine(destPath, destFilename));
+                    return i;
+                }
+                catch (System.IO.IOException ex)
                 {
+                    if (ex.Message == "Cannot create a file when that file already exists.\r\n")
+                    {
+                        destFilename = Path.GetFileNameWithoutExtension(destFilename) + $"-{DateTime.Now.Ticks:X16}" + Path.GetExtension(destFilename);
+                        continue;
+                    }
                     await Task.Delay(delay);
-                    Console.WriteLine("Ждём...");
                 }
             }
-            Console.WriteLine($"Неуспешно, ждали {attempts} попыток");
-            return false;
+            return -i;
         }
-        private void PutInGarbage(string fullFileName)
+        private async Task PutInGarbageAsync(string fullFileName)
         {
-            File.Move(fullFileName, Path.Combine(_config.GarbageFolder, Path.GetFileName(fullFileName)));
+            var filename = Path.GetFileName(fullFileName);
+            await TryMoveAsync(fullFileName, Path.Combine(_config.GarbageFolder, filename), 50, 5);
         }
         private async Task PutInCompleteAsync(string fullFileName)
         {
             var filename = Path.GetFileName(fullFileName);
-            var fileInfo = new FileInfo(fullFileName);
-            var fileIsReady = await WaitForFileAsync(fileInfo, 5, 50);
-            if (!fileIsReady)
-            {
-                throw new IOException($"Cant't acces the file {fullFileName}!");
-            }
-            try
-            {
-                File.Move(fullFileName, Path.Combine(_config.CompleteFolder, filename));
-            }
-            catch (System.IO.IOException ex)
-            {
-                if (ex.Message == "Cannot create a file when that file already exists.\r\n")
-                {
-                    filename = Path.GetFileNameWithoutExtension(filename) + $"-{DateTime.Now.Ticks:X16}" + Path.GetExtension(filename);
-                    File.Move(fullFileName, Path.Combine(_config.CompleteFolder, filename));
-                }
-                else
-                {
-                    throw ex;
-                }
-            }
+            await TryMoveAsync(fullFileName, Path.Combine(_config.CompleteFolder, filename), 50, 5);
         }
         private bool ValidateName(string fullFileName)
         {
@@ -105,18 +66,18 @@ namespace Service
             Receipt result = null;
             if (!ValidateName(fullFileName))
             {
-                PutInGarbage(fullFileName);
+                await PutInGarbageAsync(fullFileName);
             }
             else
             {
-                result = await _fileReader.Read(fullFileName);
+                result = await _fileReader.ReadAsync(fullFileName, 5, 50);
                 if (result != null)
                 {
                     await PutInCompleteAsync(fullFileName);
                 }
                 else
                 {
-                    PutInGarbage(fullFileName);
+                    await PutInGarbageAsync(fullFileName);
                 }
             }
             return result;

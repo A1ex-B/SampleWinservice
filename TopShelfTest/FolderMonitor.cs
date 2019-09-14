@@ -12,8 +12,6 @@ namespace Service
         private readonly ServiceConfig _config;
         private readonly IFileProcessor _fileProcessor;
 
-        //private readonly CancellationTokenSource _cancellationTokenSource;
-        //private Task _task;
         private readonly FileSystemWatcher _watcher;
         public FolderMonitor(IConfigLoader loader, IFileProcessor fileProcessor)
         {
@@ -21,31 +19,14 @@ namespace Service
             _config = loader.Load();
             _watcher = new FileSystemWatcher(_config.InputFolder);
             _watcher.Created += OnCreatedFile;
-
-            //_cancellationTokenSource = new CancellationTokenSource();
-            // Для теста как консольки
-            //_task = new Task(async () =>
-            //{
-            //    using (var service = new WCFServiceClient())
-            //    {
-            //        while (!_cancellationTokenSource.IsCancellationRequested)
-            //        {
-            //            Console.WriteLine("It is {0} and all is well", DateTime.Now);
-            //            //await service.GetReceiptsAsync(11); // Test!!! удалить.
-            //            await Task.Delay(3000);
-            //        }
-            //    }
-            //}, _cancellationTokenSource.Token);
         }
         public void Start()
         {
-            //_task.Start();
             _watcher.EnableRaisingEvents = true;
         }
         public void Stop()
         {
             _watcher.EnableRaisingEvents = false;
-            //_cancellationTokenSource.Cancel();
         }
 
         private async void OnCreatedFile(object sender, FileSystemEventArgs e)

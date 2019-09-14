@@ -16,26 +16,29 @@ namespace Service
         {
 
         }
-        public void HandleDeserializationError(object sender, ErrorEventArgs errorArgs)
+        public async Task<Receipt> ReadAsync(string filename, int attempts, int delay)
         {
-            //var currentError = errorArgs.ErrorContext.Error.Message;
-            //errorArgs.ErrorContext.Handled = true;
-        }
-        public async Task<Receipt> Read(string filename)
-        {
-            Receipt receipt;
-
-            try
+            Receipt receipt = null;
+            int i;
+            for (i = 0; i < attempts; i++)
             {
-                using (var reader = new StreamReader(filename))
+                try
                 {
-                    var data = await reader.ReadToEndAsync();
-                    receipt = JsonConvert.DeserializeObject<Receipt>(data);
+                    using (var reader = new StreamReader(filename))
+                    {
+                        var data = await reader.ReadToEndAsync();
+                        receipt = JsonConvert.DeserializeObject<Receipt>(data);
+                        break;
+                    }
                 }
-            }
-            catch(Newtonsoft.Json.JsonSerializationException)
-            {
-                return null;
+                catch (Newtonsoft.Json.JsonSerializationException)
+                {
+                    return null;
+                }
+                catch(System.IO.IOException)
+                {
+                    continue;
+                }
             }
             return receipt;
         }

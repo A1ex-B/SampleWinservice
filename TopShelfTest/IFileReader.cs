@@ -5,6 +5,6 @@ namespace Service
 {
     public interface IFileReader
     {
-        Task<Receipt> Read(string filename);
+        Task<Receipt> ReadAsync(string filename, int attempts, int delay);
     }
 }
