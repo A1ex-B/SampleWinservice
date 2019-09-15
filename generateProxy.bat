@@ -1,0 +1,1 @@
+ProxyGenerator.bat TopShelfTest http://localhost:8090/ReceiptService/Service

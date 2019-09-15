@@ -25,9 +25,16 @@ namespace Service
         {
             lock (_syncObject)
             {
-                using (var w = new StreamWriter(_config.LogFileFullName, true))
+                try
                 {
-                    w.WriteLine(message);
+                    using (var w = new StreamWriter(_config.LogFileFullName, true))
+                    {
+                        w.WriteLine(message);
+                    }
+                }
+                catch(Exception)
+                {
+                    ;// Это для дебага. Вообще так нельзя, но я давлю все исключения в своём логгере.
                 }
             }
         }

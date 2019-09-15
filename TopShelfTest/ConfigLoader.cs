@@ -27,7 +27,7 @@ namespace Service
                     config = JsonConvert.DeserializeObject<ServiceConfig>(reader.ReadToEnd());
                 }
             }
-            else
+            else //default
             {
                 config = new ServiceConfig
                 {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Proxy;
+using WCFService;
 
 namespace Service
 {
@@ -15,9 +15,9 @@ namespace Service
 
         public async Task SendAsync(Receipt receipt)
         {
-            using (var WCFService = new WCFServiceClient())
+            using (var service = new ServiceClient())
             {
-                await WCFService.PutReceiptAsync(receipt);
+                await service.PutReceiptAsync(receipt);
             }
         }
     }

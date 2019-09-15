@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using Proxy;
+using WCFService;
 
 namespace Service
 {
@@ -18,7 +18,7 @@ namespace Service
         }
         public async Task<Receipt> ReadAsync(string filename, int attempts, int delay)
         {
-            Receipt receipt = null;
+            ReceiptModelJson receipt = null;
             int i;
             for (i = 0; i < attempts; i++)
             {
@@ -27,15 +27,11 @@ namespace Service
                     using (var reader = new StreamReader(filename))
                     {
                         var data = await reader.ReadToEndAsync();
-                        receipt = JsonConvert.DeserializeObject<Receipt>(data);
+                        receipt = JsonConvert.DeserializeObject<ReceiptModelJson>(data);
                         break;
                     }
                 }
-                catch (Newtonsoft.Json.JsonSerializationException)
-                {
-                    return null;
-                }
-                catch(Newtonsoft.Json.JsonReaderException)
+                catch (JsonException)
                 {
                     return null;
                 }

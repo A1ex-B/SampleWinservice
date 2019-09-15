@@ -3,7 +3,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
-using Proxy;
+using WCFService;
 
 namespace Service
 {
@@ -63,10 +63,10 @@ namespace Service
                     await _receiptSender.SendAsync(receipt);
                     _logger.Log($"Sent \n{receipt}");
                 }
-                catch (System.ServiceModel.CommunicationObjectFaultedException)
+                catch (System.ServiceModel.CommunicationObjectFaultedException ex)
                 {
-                    Console.WriteLine("Ошибка связи с WCF-сервисом!");
-                    _logger.Log("Ошибка связи с WCF-сервисом!");
+                    Console.WriteLine($"Ошибка связи с WCF-сервисом! \n{ex.GetType()}:\n{ex.Message}");
+                    _logger.Log($"Ошибка связи с WCF-сервисом! \n{ex.GetType()}:\n{ex.Message}");
                 }
                 catch(Exception ex)
                 {
