@@ -90,10 +90,14 @@
     <None Include="App.config" />
     <None Include="app.manifest" />
     <None Include="ClassDiagram1.cd" />
+    <None Include="service_runner.bat" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="config.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy /y $(ProjectDir)service_runner.bat $(TargetDir)service_runner.bat</PostBuildEvent>
+  </PropertyGroup>
 </Project>
