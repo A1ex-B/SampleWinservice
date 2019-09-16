@@ -15,14 +15,25 @@ namespace Service
         private readonly ILogger _logger;
 
         private readonly FileSystemWatcher _watcher;
-        public FolderMonitor(IConfigLoader loader, IFileProcessor fileProcessor, IReceiptSender receiptSender, ILogger logger)
+        public FolderMonitor(IConfigLoader loader, IFileProcessor fileProcessor, IReceiptSender receiptSender, ILogger logger, IDirectoryChecker directoryChecker)
         {
+            try
+            {
+                directoryChecker?.CheckDirectories();
+            }
+            catch (Exception ex)
+            {
+                _logger.Log($"{ex.GetType()}:\n{ex.Message}");
+                Console.WriteLine($"{ex.GetType()}:\n{ex.Message}");
+                throw ex;
+            }
             _fileProcessor = fileProcessor ?? throw new ArgumentNullException(nameof(fileProcessor));
             _config = loader.Load();
             _watcher = new FileSystemWatcher(_config.InputFolder);
             _watcher.Created += OnCreatedFile;
             _receiptSender = receiptSender ?? throw new ArgumentNullException(nameof(receiptSender));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            
             //System.IO.Directory.SetCurrentDirectory(System.AppDomain.CurrentDomain.BaseDirectory);
         }
         public void Start()

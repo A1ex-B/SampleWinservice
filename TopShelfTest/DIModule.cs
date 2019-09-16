@@ -26,6 +26,7 @@ namespace Service
             builder.RegisterType<FileReader>().AsImplementedInterfaces().InstancePerDependency();
             builder.RegisterType<ReceiptSender>().AsImplementedInterfaces().InstancePerDependency();
             builder.RegisterType<MyDebugLogger>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<DirectoryChecker>().AsImplementedInterfaces().SingleInstance();
         }
     }
 }

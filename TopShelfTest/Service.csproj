@@ -65,10 +65,12 @@
   <ItemGroup>
     <Compile Include="ConfigLoader.cs" />
     <Compile Include="DIModule.cs" />
+    <Compile Include="DirectoryChecker.cs" />
     <Compile Include="FileProcessor.cs" />
     <Compile Include="FileReader.cs" />
     <Compile Include="GeneratedProxy\GeneratedProxy.cs" />
     <Compile Include="IConfigLoader.cs" />
+    <Compile Include="IDirectoryChecker.cs" />
     <Compile Include="IFileProcessor.cs" />
     <Compile Include="IFileReader.cs" />
     <Compile Include="ILogger.cs" />
