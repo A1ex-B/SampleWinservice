@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -12,23 +13,33 @@ namespace Service
     {
         private readonly ServiceConfig _config;
 
-        public ConfigLoader(string filename)
+        public ConfigLoader()
         {
-            _config = Load(filename);
+            _config = InitConfig();
         }
 
-        private ServiceConfig Load(string filename)
+        private ServiceConfig InitConfig()
         {
-            var config = new ServiceConfig();
-            if (filename != null)
+            ServiceConfig config;
+            try
             {
-                using (var reader = new StreamReader(filename))
+                config = new ServiceConfig
                 {
-                    config = JsonConvert.DeserializeObject<ServiceConfig>(reader.ReadToEnd());
-                }
+                    ServiceDescription = ConfigurationManager.AppSettings.Get("ServiceDescription"),
+                    ServiceDisplayName = ConfigurationManager.AppSettings.Get("ServiceDisplayName"),
+                    ServiceName = ConfigurationManager.AppSettings.Get("ServiceName"),
+                    InputFolder = ConfigurationManager.AppSettings.Get("InputFolder"),
+                    CompleteFolder = ConfigurationManager.AppSettings.Get("CompleteFolder"),
+                    GarbageFolder = ConfigurationManager.AppSettings.Get("GarbageFolder"),
+                    FileExtension = ConfigurationManager.AppSettings.Get("FileExtension"),
+                    AttempsToAccessFilesystem = Int32.Parse(ConfigurationManager.AppSettings.Get("AttempsToAccessFilesystem")),
+                    DelayForAnotherAttempt = Int32.Parse(ConfigurationManager.AppSettings.Get("DelayForAnotherAttempt")),
+                    LogFileFullName = ConfigurationManager.AppSettings.Get("LogFileFullName")
+                };
             }
-            else //default
+            catch (Exception ex) //default
             {
+                Console.WriteLine($"Error in {nameof(InitConfig)}:\n{ex.GetType()}:\n{ex.Message}");
                 config = new ServiceConfig
                 {
                     ServiceDescription = "_FolderMonitor - test task.",
@@ -42,7 +53,7 @@ namespace Service
                     DelayForAnotherAttempt = 20,
                     LogFileFullName = @"d:\Programs\CS_progs\___TestTasks\Manzana\winservicelog.txt"
                 };
-            };
+            }
             return config;
         }
 
