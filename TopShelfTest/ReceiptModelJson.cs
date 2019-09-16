@@ -41,14 +41,14 @@ namespace Service
         }
         public static implicit operator Receipt(ReceiptModelJson model)
         {
-            return new Receipt
+            return model != null ? new Receipt
             {
                 Articles =  model.Articles,
                 Discount = model.Discount,
                 Id = model.Id,
                 Number = model.Number,
                 Summ = model.Summ
-            };
+            }: null;
         }
     }
 }
